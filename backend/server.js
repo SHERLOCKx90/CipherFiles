@@ -21,6 +21,7 @@ const fileSchema = new mongoose.Schema({
     filename: String,
     encryptedData: String,
     secretKey: String,
+    iv: String,
 });
 
 
@@ -66,8 +67,9 @@ app.post('/api/upload', upload.single('file'), async (req, res) => {
     // Create a new document for the encrypted file
     const encryptedFile = new EncryptedFile({
         filename: req.file.originalname,
-        encryptedData: encrypted,
-        secretKey: secretKey
+        encryptedData: encrypted.toString('hex'),
+        secretKey: secretKey,
+        iv: iv.toString('hex'),
     });
 
     // Save the encrypted file document in the database
